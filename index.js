@@ -2,13 +2,47 @@
 
 $(document).ready(function() {
   var currentEquation;
+  var interval;
   var timeLeft = 10;
+  var currentScore = 0;
+
+  // ************** TIMER COUNTDOWN **************
+
+  var updateTimeLeft = function (amount) {
+    timeLeft += amount;
+    $('#time-left').text(timeLeft);
+  };
+
+  // ************** UPDATE CURRENT SCORE **************
+
+  var updateCurrentScore = function (amount) {
+    currentScore += amount;
+    $('#current-score').text(currentScore);
+  };
+
+  // ************** START GAME FUNCTION **************
+
+  var startGame = function () {
+    if (!interval) {
+      if (timeLeft === 0) {
+        updateTimeLeft(10);
+        updateCurrentScore(-score);
+      }
+      interval = setInterval(function() {
+        updateTimeLeft(-1);
+        if (timeLeft === 0) {
+          clearInterval(interval);
+          interval = undefined;
+        }
+      }, 1000);
+    }
+  };
 
   // ************** EQUATION GENERATOR **************
 
   var randomNumberGenerator = function (size) {
     return Math.ceil(Math.random() * size);
-  }
+  };
 
   var equationGenerator = function () {
     var question = {};
@@ -19,29 +53,14 @@ $(document).ready(function() {
     question.equation = String(num1) + " + " + String(num2);
 
     return question;
-  }
-
-  // ************** TIMER COUNTDOWN **************
-
-  var updateTimeLeft = function (amount) {
-    timeLeft += amount;
-    $('#time').text(timeLeft);
-  }
-
-  var interval = setInterval(function() {
-    updateTimeLeft(-1);
-    
-    if (timeLeft === 0) {
-      clearInterval(interval);
-    }
-  }, 1000);
+  };
 
   // ************** RENDER NEW EQUATION FUNCTION **************
 
   var renderNewEquation = function () {
     currentEquation = equationGenerator();
     $('#equation').text(currentEquation.equation);
-  }
+  };
 
   // ************** CHECK ANSWER FUNCTION **************
 
@@ -50,10 +69,12 @@ $(document).ready(function() {
       renderNewEquation();
       $('#answer-input').val('');
       updateTimeLeft(+1);
+      updateCurrentScore(+1);
     }
-  }
+  };
 
-  $('#answer-input').on('keyup', function() {
+  $('#answer-input').on('keyup', function () {
+    startGame();
     checkAnswer(Number($(this).val()), currentEquation.answer);
   });
 

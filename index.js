@@ -1,8 +1,10 @@
 // ************** DOCUMENT READY WRAPPER **************
 
 $(document).ready(function() {
-  // ************** EQUATION GENERATOR **************
   var currentEquation;
+  var timeLeft = 10;
+
+  // ************** EQUATION GENERATOR **************
 
   var randomNumberGenerator = function (size) {
     return Math.ceil(Math.random() * size);
@@ -18,6 +20,17 @@ $(document).ready(function() {
 
     return question;
   }
+
+  // ************** TIMER COUNTDOWN **************
+
+  var interval = setInterval(function() {
+    timeLeft--;
+    $('#time').text(timeLeft);
+    
+    if (timeLeft === 0) {
+      clearInterval(interval);
+    }
+  }, 1000);
 
   // ************** RENDER NEW EQUATION **************
 

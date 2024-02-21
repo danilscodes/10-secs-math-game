@@ -23,16 +23,20 @@ $(document).ready(function() {
 
   // ************** TIMER COUNTDOWN **************
 
-  var interval = setInterval(function() {
-    timeLeft--;
+  var updateTimeLeft = function (amount) {
+    timeLeft += amount;
     $('#time').text(timeLeft);
+  }
+
+  var interval = setInterval(function() {
+    updateTimeLeft(-1);
     
     if (timeLeft === 0) {
       clearInterval(interval);
     }
   }, 1000);
 
-  // ************** RENDER NEW EQUATION **************
+  // ************** RENDER NEW EQUATION FUNCTION **************
 
   var renderNewEquation = function () {
     currentEquation = equationGenerator();
@@ -45,12 +49,15 @@ $(document).ready(function() {
     if (userInput === answer) {
       renderNewEquation();
       $('#answer-input').val('');
+      updateTimeLeft(+1);
     }
   }
 
   $('#answer-input').on('keyup', function() {
     checkAnswer(Number($(this).val()), currentEquation.answer);
   });
+
+  // ************** REFRESH EQUATION **************
 
   renderNewEquation();
 });

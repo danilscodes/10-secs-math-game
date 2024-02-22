@@ -20,8 +20,9 @@ body {
 }
 
 h1 {
-  font-size: 59px;
+  font-size: 4.2rem;
   font-weight: bold;
+  text-shadow: 0 0 10px #1b29c0;
 }
 
 .time {
@@ -38,11 +39,11 @@ h1 {
 #game-container {
   border-radius: 1rem;
   background-color: rgba(86, 172, 238, 0.858);
-  box-shadow: 0 15px 20px rgba(0, 12, 55, 0.562);
+  box-shadow: 0 15px 20px 1px rgba(0, 12, 55, 0.562);
 }
 
 #equation {
-  font-size: 54px;
+  font-size: 4rem;
 }
 
 #answer-input::placeholder {

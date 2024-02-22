@@ -5,6 +5,7 @@ $(document).ready(function() {
   var interval;
   var timeLeft = 10;
   var currentScore = 0;
+  var highScore = 0;
 
   // ************** TIMER COUNTDOWN **************
 
@@ -20,13 +21,23 @@ $(document).ready(function() {
     $('#current-score').text(currentScore);
   };
 
+  // ************** UPDATE HIGH SCORE **************
+
+  var updateHighScore = function (currentScore) {
+    if (currentScore > highScore) {
+      highScore = currentScore;
+      $('#high-score').text(highScore);
+    }
+  };
+
   // ************** START GAME FUNCTION **************
 
   var startGame = function () {
     if (!interval) {
       if (timeLeft === 0) {
         updateTimeLeft(10);
-        updateCurrentScore(-score);
+        updateHighScore(currentScore);
+        updateCurrentScore(-currentScore);
       }
       interval = setInterval(function() {
         updateTimeLeft(-1);
@@ -37,6 +48,13 @@ $(document).ready(function() {
       }, 1000);
     }
   };
+
+  // ************** RESTART BUTTON **************
+
+  $('#play-button').on('click', function () {
+    updateHighScore(currentScore);
+    startGame();
+  });
 
   // ************** EQUATION GENERATOR **************
 

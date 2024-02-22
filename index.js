@@ -38,23 +38,19 @@ $(document).ready(function() {
         updateTimeLeft(10);
         updateHighScore(currentScore);
         updateCurrentScore(-currentScore);
+      } else {
+        interval = setInterval(function() {
+          updateTimeLeft(-1);
+          if (timeLeft === 0) {
+            clearInterval(interval);
+            interval = undefined;
+            $('#equation').text('GAME OVER');
+            $('#answer-input').prop('disabled', true);
+          }
+        }, 1000);
       }
-      interval = setInterval(function() {
-        updateTimeLeft(-1);
-        if (timeLeft === 0) {
-          clearInterval(interval);
-          interval = undefined;
-        }
-      }, 1000);
     }
   };
-
-  // ************** RESTART BUTTON **************
-
-  $('#play-button').on('click', function () {
-    updateHighScore(currentScore);
-    startGame();
-  });
 
   // ************** EQUATION GENERATOR **************
 
@@ -91,7 +87,11 @@ $(document).ready(function() {
         question.answer = num1 + num2;
         break;
       case '-':
-        question.answer = num1 - num2;
+        if (num2 > num1) {
+          question.answer = num2 - num1;
+        } else {
+          question.answer = num1 - num2;
+        };
         break;
       case '*':
         question.answer = num1 * num2;
@@ -105,12 +105,11 @@ $(document).ready(function() {
         break;
     }
 
-    question.equation = String(num1) + ' ' + operator + ' ' + String(num2);
-
-    /*
-    question.answer = num1 + num2;
-    question.equation = String(num1) + " + " + String(num2);
-    */
+    if (operator === '-' && num2 > num1) {
+      question.equation = String(num2) + ' ' + operator + ' ' + String(num1);
+    } else {
+      question.equation = String(num1) + ' ' + operator + ' ' + String(num2);
+    }
 
     return question;
   };
@@ -136,6 +135,16 @@ $(document).ready(function() {
   $('#answer-input').on('keyup', function () {
     startGame();
     checkAnswer(Number($(this).val()), currentEquation.answer);
+  });
+
+  // ************** RESTART BUTTON **************
+
+  $('#play-button').on('click', function () {
+    renderNewEquation();
+    $('#answer-input').prop('disabled', false);
+    $('#answer-input').val('');
+    updateHighScore(currentScore);
+    startGame();
   });
 
   // ************** REFRESH EQUATION **************

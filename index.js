@@ -62,13 +62,55 @@ $(document).ready(function() {
     return Math.ceil(Math.random() * size);
   };
 
+  // ***** MULTIPLE Q TYPES *****
+
+  var getSelectedOperators = function () {
+    var selectedOperators = [];
+    $('#question-types input:checked').each(function() {
+      selectedOperators.push($(this).val());
+    });
+    return selectedOperators;
+  };
+
+  var getRandomOperator = function () {
+    var operators = getSelectedOperators();
+    var randomIndex = Math.floor(Math.random() * operators.length);
+    return operators[randomIndex];
+  };
+
+  // ****************************
+
   var equationGenerator = function () {
     var question = {};
     var num1 = randomNumberGenerator(10);
     var num2 = randomNumberGenerator(10);
+    var operator = getRandomOperator();
 
+    switch (operator) {
+      case '+':
+        question.answer = num1 + num2;
+        break;
+      case '-':
+        question.answer = num1 - num2;
+        break;
+      case '*':
+        question.answer = num1 * num2;
+        break;
+      case '/':
+        num2 = num2 === 0 ? 1 : num2;
+        num1 = num1 * num2;
+        question.answer = num1 / num2;
+        break;
+      default:
+        break;
+    }
+
+    question.equation = String(num1) + ' ' + operator + ' ' + String(num2);
+
+    /*
     question.answer = num1 + num2;
     question.equation = String(num1) + " + " + String(num2);
+    */
 
     return question;
   };
